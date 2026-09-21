@@ -1,0 +1,23 @@
+.progress {
+  height: 8px;
+  border-radius: 2px;
+  background: var(--rule-soft);
+  overflow: hidden;
+}
+.progress__fill {
+  display: block;
+  height: 100%;
+  background: var(--brand);
+  transition: width 0.3s ease;
+}
+.progress--on-track .progress__fill,
+.progress--done .progress__fill {
+  background: var(--s-done);
+}
+.progress--at-risk .progress__fill {
+  background: var(--s-warn);
+}
+.progress--delayed .progress__fill,
+.progress--over .progress__fill {
+  background: var(--s-blocked);
+}

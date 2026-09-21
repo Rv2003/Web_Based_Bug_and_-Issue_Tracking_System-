@@ -1,0 +1,103 @@
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  width: var(--sidebar-w);
+  padding: 22px 12px 16px;
+  background: var(--brand-deep);
+  color: #dbe7eb;
+}
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px 24px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.sidebar__nav {
+  display: grid;
+  gap: 2px;
+}
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: inherit;
+  text-align: left;
+  font-weight: 500;
+}
+.sidebar__link:hover { background: rgba(255, 255, 255, 0.07); }
+.sidebar__link.is-active {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 3px 0 0 var(--mark);
+  color: #fff;
+  font-weight: 600;
+}
+.sidebar__link:focus-visible,
+.sidebar__signout:focus-visible { outline-color: var(--mark); }
+
+.sidebar__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 14px 6px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.sidebar__who {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  line-height: 1.3;
+}
+.sidebar__who strong { font-size: 14px; color: #fff; }
+.sidebar__who span { font-size: 12.5px; color: #a9bfc7; }
+.sidebar__signout {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: #dbe7eb;
+}
+.sidebar__signout:hover { background: rgba(255, 255, 255, 0.1); }
+
+@media (max-width: 860px) {
+  .sidebar {
+    inset: auto 0 0 0;
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    padding: 0 8px;
+  }
+  .sidebar__brand,
+  .sidebar__user { display: none; }
+  .sidebar__nav {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    width: 100%;
+    gap: 4px;
+    align-items: center;
+  }
+  .sidebar__link {
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .sidebar__link.is-active { box-shadow: inset 0 3px 0 var(--mark); }
+}

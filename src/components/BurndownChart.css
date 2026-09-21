@@ -1,0 +1,38 @@
+.burndown {
+  margin: 0;
+  padding: 8px 12px 16px;
+}
+.burndown__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.bd__grid { stroke: var(--rule-soft); stroke-width: 1; }
+.bd__tick { fill: var(--ink-faint); font-size: 12px; }
+.bd__gap { fill: color-mix(in srgb, var(--s-blocked) 11%, transparent); }
+.bd__ideal { fill: none; stroke: var(--ink-faint); stroke-width: 1.5; stroke-dasharray: 5 5; }
+.bd__actual { fill: none; stroke: var(--brand); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.bd__proj { fill: none; stroke: var(--s-blocked); stroke-width: 2; stroke-dasharray: 2 6; stroke-linecap: round; }
+.bd__today { stroke: var(--ink); stroke-width: 1; }
+.bd__today-tag { fill: var(--mark); }
+.bd__today-text { fill: var(--ink); font-size: 12px; font-weight: 600; }
+.bd__dot { fill: var(--brand); stroke: #fff; stroke-width: 2; }
+.bd__end { fill: var(--s-blocked); font-size: 13px; font-weight: 600; }
+
+.burndown__legend {
+  display: flex;
+  gap: 20px;
+  padding: 4px 32px 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.burndown__key::before {
+  content: '';
+  display: inline-block;
+  width: 22px;
+  margin-right: 8px;
+  vertical-align: middle;
+  border-top: 3px solid var(--brand);
+}
+.burndown__key--ideal::before { border-top: 2px dashed var(--ink-faint); }
+.burndown__key--proj::before { border-top: 2px dotted var(--s-blocked); }

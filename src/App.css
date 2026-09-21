@@ -1,0 +1,15 @@
+.app__main {
+  min-height: 100vh;
+  margin-left: var(--sidebar-w);
+  padding: 0 32px 48px;
+}
+.app__content {
+  max-width: 1200px;
+}
+
+@media (max-width: 860px) {
+  .app__main {
+    margin-left: 0;
+    padding: 0 16px 92px;
+  }
+}

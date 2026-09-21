@@ -1,0 +1,27 @@
+.badge {
+  --tone: var(--s-todo);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 9px 2px 8px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 11%, white);
+}
+.badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tone);
+}
+.badge--progress { --tone: var(--s-progress); }
+.badge--review { --tone: var(--s-review); }
+.badge--done,
+.badge--on-track { --tone: var(--s-done); }
+.badge--at-risk { --tone: var(--s-warn); }
+.badge--blocked,
+.badge--delayed { --tone: var(--s-blocked); }

@@ -1,0 +1,78 @@
+.board__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+.board__filters {
+  display: flex;
+  gap: 12px;
+}
+.board__filters label {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.board__filters select {
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  font-weight: 400;
+}
+
+.board__cols {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(250px, 1fr));
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  align-items: start;
+}
+
+.col {
+  --tone: var(--s-todo);
+  min-height: 220px;
+  padding: 0 10px 12px;
+  border-top: 3px solid var(--tone);
+  background: color-mix(in srgb, var(--tone) 6%, var(--paper));
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  transition: background 0.12s, outline-color 0.12s;
+  outline: 2px dashed transparent;
+  outline-offset: -2px;
+}
+.col--progress { --tone: var(--s-progress); }
+.col--review { --tone: var(--s-review); }
+.col--done { --tone: var(--s-done); }
+.col.is-over {
+  background: color-mix(in srgb, var(--tone) 14%, var(--paper));
+  outline-color: var(--tone);
+}
+
+.col__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 4px 12px;
+}
+.col__head h2 {
+  font-size: 16px;
+  font-weight: 650;
+}
+.col__head span {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.col__list {
+  display: grid;
+  gap: 10px;
+}
+.col__empty {
+  padding: 16px 4px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}

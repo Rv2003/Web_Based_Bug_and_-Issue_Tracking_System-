@@ -1,0 +1,26 @@
+.stat {
+  padding: 0 24px;
+  border-left: 1px solid var(--rule);
+}
+.stat:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.stat__label {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.stat__value {
+  margin: 2px 0 0;
+  font-size: 26px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.stat__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+.stat--alert .stat__value {
+  color: var(--s-blocked);
+}

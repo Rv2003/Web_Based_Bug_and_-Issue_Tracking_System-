@@ -1,0 +1,77 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(11, 42, 53, 0.55);
+}
+.modal__sheet {
+  width: min(560px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: 24px;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  box-shadow: 0 24px 60px rgba(11, 42, 53, 0.35);
+  display: grid;
+  gap: 16px;
+}
+.modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal__head h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.modal__close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: none;
+  color: var(--ink-soft);
+}
+.modal__close:hover { background: var(--paper); }
+
+.modal__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.modal__row--3 { grid-template-columns: 1fr 1fr 1.3fr; }
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+}
+.field > span:first-child { font-weight: 600; }
+.field input,
+.field select {
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+}
+.field input[aria-invalid='true'] { border-color: var(--s-blocked); }
+.field__error { color: var(--s-blocked); font-size: 13px; }
+
+.modal__foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+@media (max-width: 520px) {
+  .modal__row,
+  .modal__row--3 { grid-template-columns: 1fr; }
+}
