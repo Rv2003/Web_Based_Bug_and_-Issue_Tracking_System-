@@ -3,14 +3,17 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+const issueRoutes = require('./routes/issueRoutes');
+const userRoutes = require('./routes/userRoutes');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// middleware
 app.use(cors());
 app.use(express.json());
 
-// Database connection
+// database connection
 const connectDatabase = async () =>
 {
     try 
@@ -27,11 +30,9 @@ const connectDatabase = async () =>
 
 connectDatabase();
 
-// Base route
-app.get('/', (req, res) =>
-{
-    res.send("API is running");
-});
+// routes
+app.use('/api/issues', issueRoutes);
+app.use('/api/users', userRoutes);
 
 app.listen(PORT, () =>
 {
