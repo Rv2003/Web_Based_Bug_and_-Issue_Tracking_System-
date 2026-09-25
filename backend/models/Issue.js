@@ -14,7 +14,7 @@ const issueSchema = new mongoose.Schema(
         status: 
         {
             type: String,
-            enum: ['todo', 'in progress', 'review', 'done'],
+            enum: ['todo', 'progress', 'in progress', 'review', 'done'],
             default: 'todo'
         },
         priority: 
@@ -30,8 +30,13 @@ const issueSchema = new mongoose.Schema(
         },
         assignee: 
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            type: String,
+            default: 'unassigned'
+        },
+        points:
+        {
+            type: Number,
+            default: 3
         },
         dueDate: 
         {

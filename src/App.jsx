@@ -7,16 +7,24 @@ import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
 import Board from './pages/Board';
 import Team from './pages/Team';
-import { fetchIssues, createIssue } from './services/api';
-// keep mock user logic for now
-import { getPerson } from './data/mockData';
+import { fetchIssues, createIssue, updateIssue, loginUser } from './services/api';
+import { initialTasks } from './data/mockData';
 import './App.css';
 
 export default function App() 
 {
-    const [user, setUser] = useState(null);
+    // Restore authenticated user from localStorage if present
+    const [user, setUser] = useState(() => {
+        try {
+            const saved = localStorage.getItem('currentUser');
+            return saved ? JSON.parse(saved) : null;
+        } catch {
+            return null;
+        }
+    });
+
     const [page, setPage] = useState('dashboard');
-    const [tasks, setTasks] = useState([]);
+    const [tasks, setTasks] = useState(initialTasks);
     const [query, setQuery] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -27,16 +35,19 @@ export default function App()
         {
             const data = await fetchIssues();
             
-            // format database items to match UI requirements
-            const formattedTasks = data.map(item => ({
-                ...item,
-                id: item._id,
-                assignee: item.assignee ? item.assignee.name : 'unassigned',
-                points: 3, 
-                due: item.dueDate || '2026-10-10'
-            }));
-            
-            setTasks(formattedTasks);
+            if (data && data.length > 0)
+            {
+                // format database items to match UI requirements
+                const formattedTasks = data.map(item => ({
+                    ...item,
+                    id: item._id,
+                    assignee: item.assignee || 'unassigned',
+                    points: item.points || 3, 
+                    due: item.dueDate ? item.dueDate.slice(0, 10) : (item.due || '2026-10-10')
+                }));
+                
+                setTasks(formattedTasks);
+            }
         };
         
         loadData();
@@ -44,10 +55,36 @@ export default function App()
 
     const closeModal = useCallback(() => setModalOpen(false), []);
 
-    const moveTask = (id, status) => 
+    const handleLogin = async (email, password) => {
+        const res = await loginUser({ email, password });
+        if (res.success) {
+            setUser(res.data.user);
+            localStorage.setItem('currentUser', JSON.stringify(res.data.user));
+            if (res.data.token) {
+                localStorage.setItem('token', res.data.token);
+            }
+            return { success: true };
+        } else {
+            return { success: false, error: res.error };
+        }
+    };
+
+    const handleSignOut = () => {
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('token');
+        setUser(null);
+    };
+
+    const moveTask = async (id, status) => 
     {
-        // update status in UI (database update will be added later)
+        // update status in UI immediately
         setTasks((all) => all.map((t) => (t.id === id ? { ...t, status } : t)));
+
+        // persist to database if it's a MongoDB ID
+        if (id && id.length === 24)
+        {
+            await updateIssue(id, { status });
+        }
     };
 
     const handleCreateTask = async (draft) => 
@@ -58,7 +95,10 @@ export default function App()
             description: draft.description || "",
             project: draft.project || "web",
             status: "todo",
-            priority: draft.priority || "low"
+            priority: draft.priority || "low",
+            assignee: draft.assignee || "unassigned",
+            points: draft.points || 3,
+            dueDate: draft.due || "2026-10-10"
         });
 
         if (newTask)
@@ -66,11 +106,20 @@ export default function App()
             const taskWithUIId = { 
                 ...newTask, 
                 id: newTask._id, 
-                assignee: 'unassigned', 
-                points: 3, 
-                due: '2026-10-10' 
+                assignee: newTask.assignee || draft.assignee || 'unassigned', 
+                points: newTask.points || draft.points || 3, 
+                due: draft.due || '2026-10-10' 
             };
-            setTasks((all) => [...all, taskWithUIId]);
+            setTasks((all) => [taskWithUIId, ...all]);
+        }
+        else
+        {
+            const localTask = {
+                ...draft,
+                id: `TRK-${Math.floor(100 + Math.random() * 900)}`,
+                status: 'todo'
+            };
+            setTasks((all) => [localTask, ...all]);
         }
         
         setModalOpen(false);
@@ -79,12 +128,12 @@ export default function App()
 
     if (!user) 
     {
-        return <Login onLogin={() => setUser(getPerson('priya'))} />;
+        return <Login onLogin={handleLogin} />;
     }
 
     return (
         <div className="app">
-            <Sidebar page={page} onNavigate={setPage} user={user} onSignOut={() => setUser(null)} />
+            <Sidebar page={page} onNavigate={setPage} user={user} onSignOut={handleSignOut} />
             <div className="app__main">
                 <Topbar query={query} onQuery={setQuery} onNewTask={() => setModalOpen(true)} />
                 <main className="app__content">
