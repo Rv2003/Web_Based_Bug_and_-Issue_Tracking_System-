@@ -1,3 +1,5 @@
+name: bugtracker
+
 services:
   backend:
     build: ./BACKEND
@@ -15,3 +17,4 @@ services:
     image: mongo:7
     ports:
       - "27017:27017"
+
