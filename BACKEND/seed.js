@@ -36,7 +36,7 @@ const seedIssues = [
 
 async function seed() {
     try {
-        await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/bug_tracker');
+        await mongoose.connect(process.env.MONGO_URI || 'mongodb://mongo:27017/bugtracker');
         console.log('Connected to MongoDB.');
 
         // Insert issues if none exist
