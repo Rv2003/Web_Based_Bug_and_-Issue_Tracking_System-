@@ -3,13 +3,14 @@ import ProgressBar from '../components/ProgressBar';
 import { people } from '../data/mockData';
 import './Team.css';
 
-export default function Team({ tasks }) {
-  const rows = people.map((person) => {
+export default function Team({ tasks, members }) {
+  const peopleList = members && members.length > 0 ? members : people;
+  const rows = peopleList.map((person) => {
     const mine = tasks.filter((t) => t.assignee === person.id);
     const open = mine.filter((t) => t.status !== 'done');
     const load = open.reduce((s, t) => s + t.points, 0);
     const shipped = mine.filter((t) => t.status === 'done').reduce((s, t) => s + t.points, 0);
-    return { person, openCount: open.length, load, shipped, pct: Math.round((load / person.capacity) * 100) };
+    return { person, openCount: open.length, load, shipped, pct: Math.round((load / (person.capacity || 14)) * 100) };
   });
 
   const over = rows.filter((r) => r.pct > 100);

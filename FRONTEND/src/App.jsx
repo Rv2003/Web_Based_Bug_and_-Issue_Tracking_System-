@@ -3,12 +3,13 @@ import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import TaskModal from './components/TaskModal';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
 import Board from './pages/Board';
 import Team from './pages/Team';
-import { fetchIssues, createIssue, updateIssue, loginUser } from './services/api';
-import { initialTasks } from './data/mockData';
+import { fetchIssues, createIssue, updateIssue, loginUser, registerUser, fetchUsers } from './services/api';
+import { initialTasks, people } from './data/mockData';
 import './App.css';
 
 export default function App() 
@@ -23,12 +24,14 @@ export default function App()
         }
     });
 
+    const [authMode, setAuthMode] = useState('login');
+    const [members, setMembers] = useState(people);
     const [page, setPage] = useState('dashboard');
     const [tasks, setTasks] = useState(initialTasks);
     const [query, setQuery] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
 
-    // load issues from database when app starts
+    // load issues and team members from database when app starts
     useEffect(() => 
     {
         const loadData = async () => 
@@ -49,8 +52,22 @@ export default function App()
                 setTasks(formattedTasks);
             }
         };
+
+        const loadUsers = async () => {
+            const dbUsers = await fetchUsers();
+            if (dbUsers && dbUsers.length > 0) {
+                const merged = [...dbUsers];
+                people.forEach((p) => {
+                    if (!merged.some((m) => m.id === p.id || m.email === p.email)) {
+                        merged.push(p);
+                    }
+                });
+                setMembers(merged);
+            }
+        };
         
         loadData();
+        loadUsers();
     }, []);
 
     const closeModal = useCallback(() => setModalOpen(false), []);
@@ -63,6 +80,24 @@ export default function App()
             if (res.data.token) {
                 localStorage.setItem('token', res.data.token);
             }
+            return { success: true };
+        } else {
+            return { success: false, error: res.error };
+        }
+    };
+
+    const handleRegister = async (userData) => {
+        const res = await registerUser(userData);
+        if (res.success) {
+            setUser(res.data.user);
+            localStorage.setItem('currentUser', JSON.stringify(res.data.user));
+            if (res.data.token) {
+                localStorage.setItem('token', res.data.token);
+            }
+            setMembers((prev) => {
+                const exists = prev.some((m) => m.id === res.data.user.id || m.email === res.data.user.email);
+                return exists ? prev : [res.data.user, ...prev];
+            });
             return { success: true };
         } else {
             return { success: false, error: res.error };
@@ -128,7 +163,11 @@ export default function App()
 
     if (!user) 
     {
-        return <Login onLogin={handleLogin} />;
+        return authMode === 'register' ? (
+            <Register onRegister={handleRegister} onSwitchToLogin={() => setAuthMode('login')} />
+        ) : (
+            <Login onLogin={handleLogin} onSwitchToRegister={() => setAuthMode('register')} />
+        );
     }
 
     return (
@@ -140,10 +179,10 @@ export default function App()
                     {page === 'dashboard' && <Dashboard tasks={tasks} onNavigate={setPage} />}
                     {page === 'projects' && <Projects query={query} />}
                     {page === 'board' && <Board tasks={tasks} onMove={moveTask} query={query} onNewTask={() => setModalOpen(true)} />}
-                    {page === 'team' && <Team tasks={tasks} />}
+                    {page === 'team' && <Team tasks={tasks} members={members} />}
                 </main>
             </div>
-            <TaskModal open={modalOpen} onClose={closeModal} onCreate={handleCreateTask} />
+            <TaskModal open={modalOpen} onClose={closeModal} onCreate={handleCreateTask} members={members} />
         </div>
     );
 }

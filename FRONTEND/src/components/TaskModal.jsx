@@ -5,7 +5,9 @@ import './TaskModal.css';
 
 const blank = { title: '', project: projects[0].id, assignee: people[1].id, priority: 'medium', points: 3, due: TODAY };
 
-export default function TaskModal({ open, onClose, onCreate }) {
+export default function TaskModal({ open, onClose, onCreate, members }) {
+  const peopleList = members && members.length > 0 ? members : people;
+  const blank = { title: '', project: projects[0].id, assignee: peopleList[0]?.id || people[1].id, priority: 'medium', points: 3, due: TODAY };
   const [draft, setDraft] = useState(blank);
   const [error, setError] = useState('');
   const titleRef = useRef(null);
@@ -60,7 +62,7 @@ export default function TaskModal({ open, onClose, onCreate }) {
           <label className="field">
             <span>Assignee</span>
             <select value={draft.assignee} onChange={set('assignee')}>
-              {people.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              {peopleList.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </label>
         </div>

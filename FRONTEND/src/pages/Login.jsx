@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './Login.css';
 
-export default function Login({ onLogin }) {
+export default function Login({ onLogin, onSwitchToRegister }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -80,6 +80,13 @@ export default function Login({ onLogin }) {
           <button type="submit" className="btn btn--primary login__submit" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
+
+          <p className="auth-switch">
+            Don't have an account?{' '}
+            <button type="button" className="auth-switch__btn" onClick={onSwitchToRegister}>
+              Create an account
+            </button>
+          </p>
 
           <div style={{ marginTop: '16px', padding: '12px', background: 'var(--rule)', borderRadius: 'var(--r-sm)', fontSize: '13px' }}>
             <span style={{ fontWeight: 600, display: 'block', marginBottom: '6px' }}>Quick Demo Logins (Password: password123):</span>

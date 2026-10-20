@@ -8,7 +8,15 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     try {
         const users = await User.find().select('-password');
-        res.status(200).json(users);
+        const formatted = users.map(user => ({
+            id: user.email ? user.email.split('@')[0].toLowerCase() : user._id.toString(),
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            capacity: user.capacity || 14
+        }));
+        res.status(200).json(formatted);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -60,22 +68,42 @@ router.post('/login', async (req, res) => {
 // Register new user
 router.post('/register', async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, role, capacity } = req.body;
 
-        if (!name || !email || !password || !role) {
-            return res.status(400).json({ message: 'Name, email, password, and role are required' });
+        if (!name || !name.trim()) {
+            return res.status(400).json({ message: 'Full name is required' });
         }
 
-        const existing = await User.findOne({ email: email.toLowerCase().trim() });
+        if (!email || !email.trim()) {
+            return res.status(400).json({ message: 'Email address is required' });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.trim())) {
+            return res.status(400).json({ message: 'Please enter a valid email address' });
+        }
+
+        if (!password || password.length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+        }
+
+        const cleanEmail = email.toLowerCase().trim();
+        const existing = await User.findOne({ email: cleanEmail });
         if (existing) {
-            return res.status(400).json({ message: 'User already exists with this email' });
+            return res.status(400).json({ message: 'A user with this email already exists' });
         }
+
+        const userRole = (role && role.trim()) ? role.trim() : 'Software engineer';
+        const userCapacity = (capacity !== undefined && capacity !== null && !isNaN(Number(capacity)))
+            ? Math.max(1, Math.min(40, Number(capacity)))
+            : 14;
 
         const user = new User({
-            name,
-            email: email.toLowerCase().trim(),
+            name: name.trim(),
+            email: cleanEmail,
             password,
-            role
+            role: userRole,
+            capacity: userCapacity
         });
 
         await user.save();
@@ -100,7 +128,7 @@ router.post('/register', async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ message: error.message || 'Registration failed' });
     }
 });
 
