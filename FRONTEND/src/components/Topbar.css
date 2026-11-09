@@ -12,6 +12,15 @@
   background: var(--paper);
   border-bottom: 1px solid var(--rule);
 }
+.topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 .topbar__search {
   display: flex;
   align-items: center;
@@ -62,4 +71,13 @@
 }
 @media (max-width: 860px) {
   .topbar { margin: 0 -16px; padding: 0 16px; }
+  .topbar__search {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+  }
+  .topbar__actions {
+    flex-shrink: 0;
+    gap: 4px;
+  }
 }

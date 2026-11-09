@@ -7,9 +7,12 @@ const NAV = [
   { id: 'projects', label: 'Projects', icon: 'projects' },
   { id: 'board', label: 'Board', icon: 'board' },
   { id: 'team', label: 'Team', icon: 'team' },
+  { id: 'admin', label: 'Admin', icon: 'admin' },
 ];
 
 export default function Sidebar({ page, onNavigate, user, onSignOut }) {
+  const sysRole = user?.systemRole || (user?.email === 'admin@example.com' || user?.email === 'priya@example.com' ? 'admin' : 'member');
+
   return (
     <aside className="sidebar">
       <div className="sidebar__brand">
@@ -30,7 +33,12 @@ export default function Sidebar({ page, onNavigate, user, onSignOut }) {
             onClick={() => onNavigate(item.id)}
           >
             <Icon name={item.icon} />
-            <span>{item.label}</span>
+            <span style={{ flex: 1, textAlign: 'left' }}>{item.label}</span>
+            {item.id === 'admin' && (
+              <span className="sidebar__admin-pill">
+                {sysRole === 'admin' ? 'Admin' : 'Access'}
+              </span>
+            )}
           </button>
         ))}
       </nav>
@@ -39,7 +47,12 @@ export default function Sidebar({ page, onNavigate, user, onSignOut }) {
         <Avatar person={user} size={32} />
         <div className="sidebar__who">
           <strong>{user.name}</strong>
-          <span>{user.role}</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span>{user.role}</span>
+            <span className={`sidebar__role-tag sidebar__role-tag--${sysRole}`}>
+              {sysRole}
+            </span>
+          </span>
         </div>
         <button className="sidebar__signout" onClick={onSignOut} aria-label="Sign out" title="Sign out">
           <Icon name="logout" size={18} />

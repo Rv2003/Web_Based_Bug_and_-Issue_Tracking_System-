@@ -1,7 +1,7 @@
 import Icon from './Icon';
 import './Topbar.css';
 
-export default function Topbar({ query, onQuery, onNewTask }) {
+export default function Topbar({ query, onQuery, onNewTask, canCreateTask = true }) {
   return (
     <header className="topbar">
       <label className="topbar__search">
@@ -19,7 +19,13 @@ export default function Topbar({ query, onQuery, onNewTask }) {
           <Icon name="bell" />
           <span className="topbar__pip" aria-hidden="true" />
         </button>
-        <button className="btn btn--primary" onClick={onNewTask}>
+        <button 
+          className="btn btn--primary" 
+          onClick={canCreateTask ? onNewTask : undefined}
+          disabled={!canCreateTask}
+          title={canCreateTask ? 'Create a new task' : 'Permission required: create_tasks'}
+          style={!canCreateTask ? { opacity: 0.55, cursor: 'not-allowed' } : {}}
+        >
           <Icon name="plus" size={18} /> New task
         </button>
       </div>

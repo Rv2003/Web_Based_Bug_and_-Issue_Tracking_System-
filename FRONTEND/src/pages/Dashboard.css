@@ -32,6 +32,7 @@
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
 }
+.dash__chart { min-width: 0; }
 
 .dash__cols {
   display: grid;

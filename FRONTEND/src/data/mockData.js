@@ -1,15 +1,157 @@
 // Demo data. "Today" is fixed so overdue logic stays stable while you design.
 export const TODAY = '2026-09-20';
 
+export const PERMISSIONS = [
+  {
+    id: 'manage_users',
+    label: 'Manage Users',
+    category: 'Administration',
+    description: 'Invite, edit, suspend users and assign system roles and permissions',
+  },
+  {
+    id: 'manage_projects',
+    label: 'Manage Projects',
+    category: 'Projects',
+    description: 'Create new project repositories, update milestones, and adjust project health',
+  },
+  {
+    id: 'create_tasks',
+    label: 'Create Tasks',
+    category: 'Tasks',
+    description: 'Draft new tickets, user stories, and bug reports across any board',
+  },
+  {
+    id: 'edit_tasks',
+    label: 'Edit & Move Tasks',
+    category: 'Tasks',
+    description: 'Update assignees, estimates, priorities, descriptions, and move across columns',
+  },
+  {
+    id: 'delete_tasks',
+    label: 'Delete Tasks',
+    category: 'Tasks',
+    description: 'Permanently remove tasks, tickets, and associated logs',
+  },
+  {
+    id: 'view_analytics',
+    label: 'View Analytics',
+    category: 'Reports',
+    description: 'View sprint velocity, burndown charts, and team workload capacity',
+  },
+];
+
+export const ROLE_PRESETS = {
+  admin: {
+    id: 'admin',
+    name: 'Admin',
+    description: 'Full system access to manage users, security permissions, projects, and tasks.',
+    badgeClass: 'badge--admin',
+    permissions: ['manage_users', 'manage_projects', 'create_tasks', 'edit_tasks', 'delete_tasks', 'view_analytics'],
+  },
+  manager: {
+    id: 'manager',
+    name: 'Manager',
+    description: 'Project lead: can configure roadmaps, assign and delete tasks, and monitor workload.',
+    badgeClass: 'badge--manager',
+    permissions: ['manage_projects', 'create_tasks', 'edit_tasks', 'delete_tasks', 'view_analytics'],
+  },
+  member: {
+    id: 'member',
+    name: 'Member',
+    description: 'Standard contributor: can create and edit tasks, log points, and view dashboards.',
+    badgeClass: 'badge--member',
+    permissions: ['create_tasks', 'edit_tasks', 'view_analytics'],
+  },
+  viewer: {
+    id: 'viewer',
+    name: 'Viewer',
+    description: 'Read-only observer: can inspect roadmaps, boards, and analytics without editing.',
+    badgeClass: 'badge--viewer',
+    permissions: ['view_analytics'],
+  },
+};
+
 export const people = [
-  { id: 'priya', name: 'Priya Nair', role: 'Product manager', capacity: 10 },
-  { id: 'amara', name: 'Amara Okafor', role: 'Backend engineer', capacity: 16 },
-  { id: 'kenji', name: 'Kenji Watanabe', role: 'Frontend engineer', capacity: 16 },
-  { id: 'lucia', name: 'Lucía Herrera', role: 'QA engineer', capacity: 14 },
-  { id: 'tomas', name: 'Tomás Silva', role: 'Platform engineer', capacity: 16 },
-  { id: 'sofia', name: 'Sofia Lindqvist', role: 'Product designer', capacity: 14 },
-  { id: 'daniel', name: 'Daniel Mensah', role: 'Mobile engineer', capacity: 12 },
-  { id: 'hana', name: 'Hana Kim', role: 'Data engineer', capacity: 16 },
+  { 
+    id: 'priya', 
+    name: 'Priya Nair', 
+    email: 'priya@example.com',
+    role: 'Product manager', 
+    systemRole: 'admin',
+    permissions: ROLE_PRESETS.admin.permissions,
+    status: 'active',
+    capacity: 10 
+  },
+  { 
+    id: 'amara', 
+    name: 'Amara Okafor', 
+    email: 'amara@example.com',
+    role: 'Backend engineer', 
+    systemRole: 'manager',
+    permissions: ROLE_PRESETS.manager.permissions,
+    status: 'active',
+    capacity: 16 
+  },
+  { 
+    id: 'kenji', 
+    name: 'Kenji Watanabe', 
+    email: 'kenji@example.com',
+    role: 'Frontend engineer', 
+    systemRole: 'member',
+    permissions: ROLE_PRESETS.member.permissions,
+    status: 'active',
+    capacity: 16 
+  },
+  { 
+    id: 'lucia', 
+    name: 'Lucía Herrera', 
+    email: 'lucia@example.com',
+    role: 'QA engineer', 
+    systemRole: 'member',
+    permissions: ROLE_PRESETS.member.permissions,
+    status: 'active',
+    capacity: 14 
+  },
+  { 
+    id: 'tomas', 
+    name: 'Tomás Silva', 
+    email: 'tomas@example.com',
+    role: 'Platform engineer', 
+    systemRole: 'member',
+    permissions: ROLE_PRESETS.member.permissions,
+    status: 'active',
+    capacity: 16 
+  },
+  { 
+    id: 'sofia', 
+    name: 'Sofia Lindqvist', 
+    email: 'sofia@example.com',
+    role: 'Product designer', 
+    systemRole: 'member',
+    permissions: ROLE_PRESETS.member.permissions,
+    status: 'active',
+    capacity: 14 
+  },
+  { 
+    id: 'daniel', 
+    name: 'Daniel Mensah', 
+    email: 'daniel@example.com',
+    role: 'Mobile engineer', 
+    systemRole: 'member',
+    permissions: ROLE_PRESETS.member.permissions,
+    status: 'active',
+    capacity: 12 
+  },
+  { 
+    id: 'hana', 
+    name: 'Hana Kim', 
+    email: 'hana@example.com',
+    role: 'Data engineer', 
+    systemRole: 'viewer',
+    permissions: ROLE_PRESETS.viewer.permissions,
+    status: 'active',
+    capacity: 16 
+  },
 ];
 
 export const getPerson = (id) => people.find((p) => p.id === id);

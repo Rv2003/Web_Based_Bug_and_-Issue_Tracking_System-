@@ -3,15 +3,104 @@ require('dotenv').config();
 const Issue = require('./models/Issue');
 const User = require('./models/User');
 
+const ROLE_PERMISSIONS = {
+    admin: ['manage_users', 'manage_projects', 'create_tasks', 'edit_tasks', 'delete_tasks', 'view_analytics'],
+    manager: ['manage_projects', 'create_tasks', 'edit_tasks', 'delete_tasks', 'view_analytics'],
+    member: ['create_tasks', 'edit_tasks', 'view_analytics'],
+    viewer: ['view_analytics']
+};
+
 const seedUsers = [
-    { name: 'Priya Nair', email: 'priya@example.com', password: 'password123', role: 'Product manager', capacity: 10 },
-    { name: 'Amara Okafor', email: 'amara@example.com', password: 'password123', role: 'Backend engineer', capacity: 16 },
-    { name: 'Kenji Watanabe', email: 'kenji@example.com', password: 'password123', role: 'Frontend engineer', capacity: 16 },
-    { name: 'Lucía Herrera', email: 'lucia@example.com', password: 'password123', role: 'QA engineer', capacity: 14 },
-    { name: 'Tomás Silva', email: 'tomas@example.com', password: 'password123', role: 'Platform engineer', capacity: 16 },
-    { name: 'Sofia Lindqvist', email: 'sofia@example.com', password: 'password123', role: 'Product designer', capacity: 14 },
-    { name: 'Daniel Mensah', email: 'daniel@example.com', password: 'password123', role: 'Mobile engineer', capacity: 12 },
-    { name: 'Hana Kim', email: 'hana@example.com', password: 'password123', role: 'Data engineer', capacity: 16 }
+    { 
+        name: 'Admin User', 
+        email: 'admin@example.com', 
+        password: 'password123', 
+        role: 'System Administrator', 
+        systemRole: 'admin',
+        permissions: ROLE_PERMISSIONS.admin,
+        status: 'active',
+        capacity: 20 
+    },
+    { 
+        name: 'Priya Nair', 
+        email: 'priya@example.com', 
+        password: 'password123', 
+        role: 'Product manager', 
+        systemRole: 'admin',
+        permissions: ROLE_PERMISSIONS.admin,
+        status: 'active',
+        capacity: 10 
+    },
+    { 
+        name: 'Amara Okafor', 
+        email: 'amara@example.com', 
+        password: 'password123', 
+        role: 'Backend engineer', 
+        systemRole: 'manager',
+        permissions: ROLE_PERMISSIONS.manager,
+        status: 'active',
+        capacity: 16 
+    },
+    { 
+        name: 'Kenji Watanabe', 
+        email: 'kenji@example.com', 
+        password: 'password123', 
+        role: 'Frontend engineer', 
+        systemRole: 'member',
+        permissions: ROLE_PERMISSIONS.member,
+        status: 'active',
+        capacity: 16 
+    },
+    { 
+        name: 'Lucía Herrera', 
+        email: 'lucia@example.com', 
+        password: 'password123', 
+        role: 'QA engineer', 
+        systemRole: 'member',
+        permissions: ROLE_PERMISSIONS.member,
+        status: 'active',
+        capacity: 14 
+    },
+    { 
+        name: 'Tomás Silva', 
+        email: 'tomas@example.com', 
+        password: 'password123', 
+        role: 'Platform engineer', 
+        systemRole: 'member',
+        permissions: ROLE_PERMISSIONS.member,
+        status: 'active',
+        capacity: 16 
+    },
+    { 
+        name: 'Sofia Lindqvist', 
+        email: 'sofia@example.com', 
+        password: 'password123', 
+        role: 'Product designer', 
+        systemRole: 'member',
+        permissions: ROLE_PERMISSIONS.member,
+        status: 'active',
+        capacity: 14 
+    },
+    { 
+        name: 'Daniel Mensah', 
+        email: 'daniel@example.com', 
+        password: 'password123', 
+        role: 'Mobile engineer', 
+        systemRole: 'member',
+        permissions: ROLE_PERMISSIONS.member,
+        status: 'active',
+        capacity: 12 
+    },
+    { 
+        name: 'Hana Kim', 
+        email: 'hana@example.com', 
+        password: 'password123', 
+        role: 'Data engineer', 
+        systemRole: 'viewer',
+        permissions: ROLE_PERMISSIONS.viewer,
+        status: 'active',
+        capacity: 16 
+    }
 ];
 
 const seedIssues = [
@@ -36,7 +125,7 @@ const seedIssues = [
 
 async function seed() {
     try {
-        await mongoose.connect(process.env.MONGO_URI || 'mongodb://mongo:27017/bugtracker');
+        await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/bug_tracker');
         console.log('Connected to MongoDB.');
 
         // Insert issues if none exist
@@ -48,7 +137,7 @@ async function seed() {
             console.log(`Issues collection already has ${issueCount} items.`);
         }
 
-        // Insert or update users with hashed passwords
+        // Insert or update users with hashed passwords and role permissions
         for (const u of seedUsers) {
             let user = await User.findOne({ email: u.email });
             if (!user) {
@@ -56,10 +145,15 @@ async function seed() {
                 await user.save();
                 console.log(`Created user ${u.name}`);
             } else {
+                user.name = u.name;
+                user.role = u.role;
+                user.systemRole = u.systemRole;
+                user.permissions = u.permissions;
+                user.status = u.status;
                 user.password = u.password;
                 user.capacity = u.capacity;
                 await user.save();
-                console.log(`Updated user ${u.name} with password`);
+                console.log(`Updated user ${u.name} with permissions`);
             }
         }
         console.log('Users verified and passwords updated successfully.');

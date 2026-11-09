@@ -46,6 +46,47 @@
 .sidebar__link:focus-visible,
 .sidebar__signout:focus-visible { outline-color: var(--mark); }
 
+.sidebar__admin-pill {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border-radius: 99px;
+  background: rgba(242, 201, 76, 0.2);
+  color: var(--mark);
+}
+
+.sidebar__role-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.sidebar__role-tag--admin {
+  background: #7c3aed;
+  color: #fff;
+}
+
+.sidebar__role-tag--manager {
+  background: #0284c7;
+  color: #fff;
+}
+
+.sidebar__role-tag--member {
+  background: #0d9488;
+  color: #fff;
+}
+
+.sidebar__role-tag--viewer {
+  background: #64748b;
+  color: #fff;
+}
+
 .sidebar__user {
   display: flex;
   align-items: center;

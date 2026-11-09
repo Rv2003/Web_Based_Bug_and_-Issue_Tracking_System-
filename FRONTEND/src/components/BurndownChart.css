@@ -36,3 +36,15 @@
 }
 .burndown__key--ideal::before { border-top: 2px dashed var(--ink-faint); }
 .burndown__key--proj::before { border-top: 2px dotted var(--s-blocked); }
+
+@media (max-width: 600px) {
+  .burndown {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .burndown__svg,
+  .burndown__legend {
+    min-width: 640px;
+  }
+}

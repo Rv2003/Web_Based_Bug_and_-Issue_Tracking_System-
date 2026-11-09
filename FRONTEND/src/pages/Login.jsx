@@ -87,15 +87,6 @@ export default function Login({ onLogin, onSwitchToRegister }) {
               Create an account
             </button>
           </p>
-
-          <div style={{ marginTop: '16px', padding: '12px', background: 'var(--rule)', borderRadius: 'var(--r-sm)', fontSize: '13px' }}>
-            <span style={{ fontWeight: 600, display: 'block', marginBottom: '6px' }}>Quick Demo Logins (Password: password123):</span>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              <button type="button" className="btn" style={{ padding: '4px 8px', fontSize: '12px' }} onClick={() => autofillDemo('priya@example.com')}>Priya (PM)</button>
-              <button type="button" className="btn" style={{ padding: '4px 8px', fontSize: '12px' }} onClick={() => autofillDemo('kenji@example.com')}>Kenji (Frontend)</button>
-              <button type="button" className="btn" style={{ padding: '4px 8px', fontSize: '12px' }} onClick={() => autofillDemo('amara@example.com')}>Amara (Backend)</button>
-            </div>
-          </div>
         </form>
       </section>
     </main>

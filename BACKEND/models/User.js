@@ -3,33 +3,46 @@ const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
     {
-        name: 
-        {
+        name: {
             type: String,
             required: true,
             trim: true
         },
-        email: 
-        {
+        email: {
             type: String,
             required: true,
             unique: true,
             lowercase: true,
             trim: true
         },
-        password:
-        {
+        password: {
             type: String,
             required: true
         },
-        role: 
-        {
+        // Job title / Department role (e.g., "Product manager", "Backend engineer")
+        role: {
             type: String,
             required: true,
             trim: true
         },
-        capacity:
-        {
+        // System access role (admin, manager, member, viewer)
+        systemRole: {
+            type: String,
+            enum: ['admin', 'manager', 'member', 'viewer'],
+            default: 'member'
+        },
+        // Granular permission keys
+        permissions: {
+            type: [String],
+            default: ['create_tasks', 'edit_tasks', 'view_analytics']
+        },
+        // Account status
+        status: {
+            type: String,
+            enum: ['active', 'suspended'],
+            default: 'active'
+        },
+        capacity: {
             type: Number,
             default: 14
         }

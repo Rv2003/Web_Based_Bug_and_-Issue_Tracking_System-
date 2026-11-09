@@ -86,6 +86,61 @@ export const fetchUsers = async () => {
         return response.data;
     } catch (error) {
         console.error('Error fetching users', error);
-        return [];
+        return null;
+    }
+};
+
+// Admin: create user directly
+export const adminCreateUser = async (userData) => {
+    try {
+        const response = await api.post('/users', userData);
+        return { success: true, data: response.data };
+    } catch (error) {
+        const message = error.response?.data?.message || error.message || 'Failed to create user';
+        return { success: false, error: message };
+    }
+};
+
+// Admin: update user details and permissions
+export const adminUpdateUser = async (id, userData) => {
+    try {
+        const response = await api.put(`/users/${id}`, userData);
+        return { success: true, data: response.data };
+    } catch (error) {
+        const message = error.response?.data?.message || error.message || 'Failed to update user';
+        return { success: false, error: message };
+    }
+};
+
+// Admin: delete user
+export const adminDeleteUser = async (id) => {
+    try {
+        const response = await api.delete(`/users/${id}`);
+        return { success: true, data: response.data };
+    } catch (error) {
+        const message = error.response?.data?.message || error.message || 'Failed to delete user';
+        return { success: false, error: message };
+    }
+};
+
+// Admin: toggle or set status (active / suspended)
+export const adminUpdateStatus = async (id, status) => {
+    try {
+        const response = await api.patch(`/users/${id}/status`, { status });
+        return { success: true, data: response.data };
+    } catch (error) {
+        const message = error.response?.data?.message || error.message || 'Failed to update status';
+        return { success: false, error: message };
+    }
+};
+
+// Admin: update permissions and systemRole
+export const adminUpdatePermissions = async (id, { systemRole, permissions }) => {
+    try {
+        const response = await api.patch(`/users/${id}/permissions`, { systemRole, permissions });
+        return { success: true, data: response.data };
+    } catch (error) {
+        const message = error.response?.data?.message || error.message || 'Failed to update permissions';
+        return { success: false, error: message };
     }
 };
