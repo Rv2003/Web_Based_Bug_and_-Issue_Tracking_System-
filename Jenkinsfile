@@ -38,6 +38,24 @@ pipeline {
             }
         }
 
+        stage('Push to Docker Hub') {
+            steps {
+                // the token lives in the jenkins credential called dockerhub
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DH_USER', passwordVariable: 'DH_TOKEN')]) {
+                    sh '''
+                        trap 'docker logout' EXIT
+                        echo "$DH_TOKEN" | docker login -u "$DH_USER" --password-stdin
+                        for name in backend frontend; do
+                            docker tag bugtracker-$name:latest $DH_USER/bugtracker-$name:latest
+                            docker tag bugtracker-$name:latest $DH_USER/bugtracker-$name:$BUILD_NUMBER
+                            docker push $DH_USER/bugtracker-$name:latest
+                            docker push $DH_USER/bugtracker-$name:$BUILD_NUMBER
+                        done
+                    '''
+                }
+            }
+        }
+
         stage('Seed demo data') {
             steps {
                 sh 'docker compose exec -T backend npm run seed'
