@@ -50,11 +50,33 @@ npm install
 npm run dev
 ```
 
+## Jenkins pipeline
+
+The `Jenkinsfile` runs on a Jenkins agent that has Docker. Each build:
+
+1. builds the backend and frontend images
+2. starts the stack with `docker compose up -d`
+3. checks that the API (port 5000) and the frontend (port 3000) answer
+4. pushes both images to Docker Hub
+5. seeds the demo data
+
+To set it up, make a pipeline job with "Pipeline script from SCM" that points at this repo and the `Jenkinsfile` path. The file runs on the agent labelled `rootless-user-agent`, so change that label to match your own agent. The push step needs a Jenkins username/password credential with the ID `dockerhub` (a Docker Hub username and an access token).
+
+## Docker Hub images
+
+The pipeline pushes two images, each tagged `latest` and with the Jenkins build number:
+
+- `mudeera03/bugtracker-backend`
+- `mudeera03/bugtracker-frontend`
+
+MongoDB uses the official `mongo` image, so it isn't pushed.
+
 ## Layout
 
 ```
 BACKEND/    Express API (models, routes, seed script)
 FRONTEND/   React app
 docker-compose.yml
+Jenkinsfile                build, deploy, smoke test, push to docker hub, seed
 .github/workflows/ci.yml   build + docker build on every push
 ```
