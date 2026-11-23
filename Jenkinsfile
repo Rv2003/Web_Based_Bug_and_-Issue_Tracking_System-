@@ -7,13 +7,8 @@ pipeline {
         timeout(time: 25, unit: 'MINUTES')
     }
 
+    // no checkout stage, jenkins already checks the repo out to read this file
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Rv2003/Web_Based_Bug_and_-Issue_Tracking_System-.git'
-            }
-        }
-
         stage('Build images') {
             steps {
                 sh 'docker compose build'
